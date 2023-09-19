@@ -37,6 +37,10 @@ dependencies {
     implementation libs.appcompat
     implementation libs.material
 
+    implementation libs.daggerHiltAndroid
+    implementation libs.daggerHiltAndroidCompiler
+    
+
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espressoCore

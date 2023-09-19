@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 @Database(entities = [ShacklesSearchEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun searchQueryDao(): SearchQueryDao
+    abstract fun searchQueryDao(): ShacklesDao
 
     companion object {
         const val DATABASE_NAME = "shackle_db"

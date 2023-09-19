@@ -37,11 +37,14 @@ dependencies {
     implementation libs.daggerHiltAndroid
     implementation libs.daggerHiltAndroidCompiler
     implementation libs.androidxHiltCompiler
+    implementation libs.retrofit
 
     implementation libs.appcompat
     implementation libs.material
     implementation project(path: ':network')
     implementation libs.room.common
+    implementation project(path: ':domain')
+    implementation project(path: ':database')
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espressoCore

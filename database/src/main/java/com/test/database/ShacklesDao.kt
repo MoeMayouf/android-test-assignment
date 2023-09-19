@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface SearchQueryDao {
+interface ShacklesDao {
 
     @Query("SELECT * FROM shacklessearchentity ORDER BY date_added DESC")
     suspend fun getSearchQuery(): List<ShacklesSearchEntity>
