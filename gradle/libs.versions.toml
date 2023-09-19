@@ -69,6 +69,7 @@ mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "m
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 coreTesting = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+room-common = { group = "androidx.room", name = "room-common", version = "2.5.2" }
 
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
