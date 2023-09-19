@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">ShackleHotelBuddy</string>
+    <string name="children">children</string>
+    <string name="adults">adults</string>
+    <string name="check_out_date">Check-out date</string>
+    <string name="date_hint">Date hint</string>
+    <string name="check_in_date">Check-in Date</string>
+    <string name="select_guests_date_and_time">Select the guests and time</string>
+    <string name="valid_info">Please enter valid information</string>
+    <string name="search">Search</string>
+    <string name="no_data">No data</string>
 </resources>

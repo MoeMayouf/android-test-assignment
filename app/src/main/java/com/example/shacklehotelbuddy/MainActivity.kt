@@ -3,63 +3,65 @@ package com.example.shacklehotelbuddy
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.shacklehotelbuddy.ui.DetailView
 import com.example.shacklehotelbuddy.ui.theme.ShackleHotelBuddyTheme
+import com.test.domain.model.PropertyQuery
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             ShackleHotelBuddyTheme {
-               MainScreen()
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = AppScreen.HotelSearchScreen.route
+                ) {
+                    composable(route = AppScreen.HotelSearchScreen.route) {
+                        val viewModel: ShacklesViewModel = hiltViewModel()
+                        val propertyQueryList =
+                            viewModel.propertyQueryList.collectAsState(emptyList())
+                        HotelSearchScreen(navController, propertyQueryList.value, onSearchClick = {
+                            //viewModel.insertSearchQuery(it)
+                            navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                set("searchQuery", it)
+                            }
+                            navController.navigate(AppScreen.PropertyListScreen.route)
+                        })
+                    }
+
+
+                    composable(
+                        route = AppScreen.PropertyListScreen.route
+                    ) {
+                        val propertyQuery =
+                            navController.previousBackStackEntry?.savedStateHandle?.get<PropertyQuery>(
+                                "searchQuery"
+                            )
+                        val viewModel: ShacklesViewModel = hiltViewModel()
+
+                        viewModel.fetchPropertiesList(
+                            propertyQuery?.checkedInDate ?: "",
+                            propertyQuery?.checkedOutDate ?: "",
+                            propertyQuery?.adults ?: 0,
+                            propertyQuery?.children ?: 0
+                        )
+
+                        val propertiesList = viewModel.propertiesList.collectAsState()
+                        val isLoading = viewModel.isLoading.collectAsState()
+                        DetailView(navController = navController, propertiesList, isLoading)
+                    }
+                }
             }
         }
-    }
-}
-
-@Composable
-fun MainScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .paint(
-                painterResource(id = R.drawable.background),
-                contentScale = ContentScale.FillWidth
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .border(width = 2.dp, color = ShackleHotelBuddyTheme.colors.grayBorder)
-                .background(ShackleHotelBuddyTheme.colors.white)
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Hello!",
-                style = ShackleHotelBuddyTheme.typography.bodyMedium,
-                color = ShackleHotelBuddyTheme.colors.grayText
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ShackleHotelBuddyTheme {
-        MainScreen()
     }
 }
