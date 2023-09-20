@@ -1,7 +1,9 @@
-package com.test.data
+package com.test.domain
 
+import com.test.database.ShacklesSearchEntity
 import com.test.domain.model.Property
 import com.test.domain.model.PropertyList
+import com.test.domain.model.PropertyQuery
 import com.test.network.entities.response.PropertiesListResponse
 
 fun PropertiesListResponse.toPropertyList() =
@@ -15,3 +17,9 @@ fun PropertiesListResponse.toPropertyList() =
             it.star
         )
     })
+
+fun PropertyQuery.toShacklesSearchEntity() =
+    ShacklesSearchEntity(id, checkedInDate, checkedOutDate, adults, children, time)
+
+fun ShacklesSearchEntity.toPropertyQuery() =
+    PropertyQuery(id, checkedInDate, checkedOutDate, adults, children, date)

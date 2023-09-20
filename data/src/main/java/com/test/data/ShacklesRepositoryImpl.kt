@@ -1,7 +1,8 @@
-package com.test.data
+package com.test.domain
 
 import com.test.database.ShacklesDao
 import com.test.domain.model.PropertyList
+import com.test.domain.model.PropertyQuery
 import com.test.domain.repository.ShacklesRepository
 import com.test.domain.utils.Results
 import com.test.network.api.ApiService
@@ -18,10 +19,12 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class ShacklesRepositoryImpl @Inject constructor(
+@Singleton
+open class ShacklesRepositoryImpl @Inject constructor(
     private val api: ApiService,
-    private val schacklesDao: ShacklesDao
+    private val shacklesDao: ShacklesDao
 ) : ShacklesRepository {
     override suspend fun getPropertiesList(
         checkedInDate: String,
@@ -29,7 +32,6 @@ class ShacklesRepositoryImpl @Inject constructor(
         adult: Int,
         children: Int
     ): Results<PropertyList> {
-        // TODO: EXTRACT SAMPLE DATA FOR THE TIME BEING
         val samplePropertiesListRequest = PropertiesListRequest(
             checkInDate = CheckInOutDate(
                 day = 15,
@@ -83,6 +85,18 @@ class ShacklesRepositoryImpl @Inject constructor(
                 }
             )
         }
+    }
+
+    override suspend fun getSearchQueryList(): List<PropertyQuery> {
+        return shacklesDao.getSearchQuery().map { it.toPropertyQuery() }
+    }
+
+    override suspend fun insertProperty(propertyQuery: PropertyQuery) {
+        return shacklesDao.insertSearchQuery(propertyQuery.toShacklesSearchEntity())
+    }
+
+    override suspend fun deleteProperty(propertyQuery: PropertyQuery) {
+        shacklesDao.deleteSearchQuery(propertyQuery.toShacklesSearchEntity())
     }
 
 }
