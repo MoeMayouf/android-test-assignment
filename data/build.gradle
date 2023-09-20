@@ -41,8 +41,6 @@ dependencies {
     kapt libs.daggerHiltAndroidCompiler
     kapt libs.androidxHiltCompiler
     implementation libs.retrofit
-    implementation libs.
-
     implementation libs.appcompat
     implementation libs.material
     implementation project(path: ':network')
