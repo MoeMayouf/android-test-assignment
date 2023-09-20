@@ -82,7 +82,8 @@ fun MainColumn(
                     placeholder = stringResource(R.string.date_hint),
                     datePickerDialog = checkInDatePicker,
                     focusManager = focusManager,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
+                    tag = "CheckInTag"
                 )
 
                 Divider()
@@ -95,7 +96,8 @@ fun MainColumn(
                     placeholder = stringResource(R.string.date_hint),
                     datePickerDialog = checkOutDatePicker,
                     focusManager = focusManager,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
+                    tag = "CheckOutTag"
                 )
 
                 Divider()
@@ -107,7 +109,8 @@ fun MainColumn(
                     onValueChange = onAdultTextChange,
                     placeholder = stringResource(R.string.adults),
                     focusManager = focusManager,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
+                    tag = "AdultsTag"
                 )
 
                 Divider()
@@ -119,7 +122,8 @@ fun MainColumn(
                     onValueChange = onChildrenTextChange,
                     placeholder = stringResource(R.string.app_name), //TODO:
                     focusManager = focusManager,
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Done,
+                    tag = "ChildrenTag"
                 )
             }
         }
@@ -159,7 +163,8 @@ fun DateRow(
     placeholder: String,
     datePickerDialog: DatePickerDialog,
     focusManager: FocusManager,
-    imeAction: ImeAction
+    imeAction: ImeAction,
+    tag: String
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -198,7 +203,7 @@ fun DateRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .testTag("tag")
+                .testTag(tag = tag)
                 .clickable { datePickerDialog.show() },
             onValueChange = onValueChange,
             placeholder = {
@@ -231,7 +236,8 @@ fun NumberRow(
     onValueChange: (String) -> Unit,
     placeholder: String,
     focusManager: FocusManager,
-    imeAction: ImeAction
+    imeAction: ImeAction,
+    tag: String
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
