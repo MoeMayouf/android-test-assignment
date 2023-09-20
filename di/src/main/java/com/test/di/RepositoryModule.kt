@@ -1,23 +1,16 @@
 package com.test.di
 
 import com.test.data.ShacklesRepositoryImpl
-import com.test.database.ShacklesDao
 import com.test.domain.repository.ShacklesRepository
-import com.test.network.api.ApiService
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
-interface AppModule {
+@InstallIn(ViewModelComponent::class)
+abstract class RepositoryModule {
 
-    @Provides
-    @Singleton
-    fun provideShacklesRepository(
-        apiService: ApiService,
-        shacklesDao: ShacklesDao
-    ): ShacklesRepository = ShacklesRepositoryImpl(apiService, shacklesDao)
+    @Binds
+    abstract fun bindShacklesRepository(shacklesRepository: ShacklesRepositoryImpl): ShacklesRepository
 }

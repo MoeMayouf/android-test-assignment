@@ -1,4 +1,4 @@
-package com.test.domain
+package com.test.data
 
 import com.test.database.ShacklesDao
 import com.test.domain.model.PropertyList

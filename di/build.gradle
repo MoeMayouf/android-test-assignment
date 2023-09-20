@@ -1,11 +1,13 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
     namespace 'com.test.di'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 24
@@ -21,11 +23,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
     }
 }
 
@@ -36,8 +44,11 @@ dependencies {
     implementation libs.appcompat
     implementation libs.material
 
-    implementation libs.daggerHiltAndroidCompiler
     implementation libs.daggerHiltAndroid
+    implementation project(path: ':data')
+
+    kapt libs.daggerHiltAndroidCompiler
+    kapt libs.androidxHiltCompiler
     implementation libs.hiltNavigationCompose
     implementation libs.androidxHiltCompiler
     implementation libs.retrofit
@@ -45,9 +56,10 @@ dependencies {
     implementation libs.room.common
     implementation libs.roomKtx
     implementation libs.roomRuntime
+
+    implementation project(path: ':app')
     implementation project(path: ':database')
     implementation project(path: ':network')
-    implementation project(path: ':data')
     implementation project(path: ':domain')
 
     testImplementation libs.junit

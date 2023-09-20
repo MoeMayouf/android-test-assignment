@@ -112,7 +112,7 @@ fun PropertyItem(property: Property) {
                 .clip(RoundedCornerShape(8.dp)),
             contentScale = ContentScale.Crop
         ) {
-            it.error(com.google.android.material.R.drawable.mtrl_ic_error)
+            it.error(R.drawable.ic_launcher_background)
         }
         Row(
             modifier = Modifier

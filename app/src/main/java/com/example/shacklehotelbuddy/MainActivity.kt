@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                         val propertyQueryList =
                             viewModel.propertyQueryList.collectAsState(emptyList())
                         HotelSearchScreen(navController, propertyQueryList.value, onSearchClick = {
-                            //viewModel.insertSearchQuery(it)
+                            viewModel.insertPropertyQuery(it)
                             navController.currentBackStackEntry?.savedStateHandle?.apply {
                                 set("searchQuery", it)
                             }

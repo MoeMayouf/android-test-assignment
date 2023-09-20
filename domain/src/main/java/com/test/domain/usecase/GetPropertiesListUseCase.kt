@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetPropertiesListUseCase @Inject constructor(
-    private val shackleRepository: ShacklesRepository
+    private val shacklesRepository: ShacklesRepository
 ) {
     operator fun invoke(
         checkedInDate: String,
@@ -16,7 +16,7 @@ class GetPropertiesListUseCase @Inject constructor(
         children: Int
     ): Flow<Results<Any>> = flow {
         emit(
-            shackleRepository.getPropertiesList(checkedInDate, checkedOutDate, adults, children)
+            shacklesRepository.getPropertiesList(checkedInDate, checkedOutDate, adults, children)
         )
     }
 }
