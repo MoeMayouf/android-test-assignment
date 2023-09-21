@@ -30,34 +30,35 @@ class MainActivity : ComponentActivity() {
                         val viewModel: ShacklesViewModel = hiltViewModel()
                         val propertyQueryList =
                             viewModel.propertyQueryList.collectAsState(emptyList())
-                        HotelSearchScreen(navController, propertyQueryList.value, onSearchClick = {
-                            viewModel.insertPropertyQuery(it)
-                            navController.currentBackStackEntry?.savedStateHandle?.apply {
-                                set("propertyQuery", it)
-                            }
+                        HotelSearchScreen(navController, propertyQueryList.value) { propertyQuery ->
+                            viewModel.insertPropertyQuery(propertyQuery)
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "propertyQuery",
+                                propertyQuery
+                            )
                             navController.navigate(AppScreen.PropertyListScreen.route)
-                        })
+                        }
                     }
 
-                    composable(
-                        route = AppScreen.PropertyListScreen.route
-                    ) {
+                    composable(route = AppScreen.PropertyListScreen.route) {
                         val propertyQuery =
                             navController.previousBackStackEntry?.savedStateHandle?.get<PropertyQuery>(
                                 "propertyQuery"
                             )
                         val viewModel: ShacklesViewModel = hiltViewModel()
 
-                        viewModel.fetchPropertiesList(
-                            propertyQuery?.checkedInDate ?: "",
-                            propertyQuery?.checkedOutDate ?: "",
-                            propertyQuery?.adults ?: 0,
-                            propertyQuery?.children ?: 0
-                        )
+                        if (propertyQuery != null) {
+                            viewModel.fetchPropertiesList(
+                                propertyQuery.checkedInDate!!,
+                                propertyQuery.checkedOutDate!!,
+                                propertyQuery.adults!!,
+                                propertyQuery.children!!
+                            )
+                        }
 
                         val propertiesList = viewModel.propertiesList.collectAsState()
                         val isLoading = viewModel.isLoading.collectAsState()
-                        DetailView(navController = navController, propertiesList, isLoading)
+                        DetailView(navController, propertiesList, isLoading)
                     }
                 }
             }
