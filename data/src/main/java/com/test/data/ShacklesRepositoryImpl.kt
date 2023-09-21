@@ -32,42 +32,16 @@ open class ShacklesRepositoryImpl @Inject constructor(
         adult: Int,
         children: Int
     ): Results<PropertyList> {
-        val samplePropertiesListRequest = PropertiesListRequest(
-            checkInDate = CheckInOutDate(
-                day = 15,
-                month = 9,
-                year = 2023
-            ),
-            checkOutDate = CheckInOutDate(
-                day = 22,
-                month = 9,
-                year = 2023
-            ),
-            currency = "USD",
-            destination = Destination("New York City"),
-            eaPid = 12345,
-            filters = Filters(
-                price = Price(
-                    min = 100,
-                    max = 500
-                )
-            ),
-            locale = "en_US",
-            resultsSize = 10,
-            resultsStartingIndex = 0,
-            rooms = listOf(
-                Room(
-                    adults = 1,
-                    children = listOf(Children(5))
-                ),
-                Room(
-                    adults = 1,
-                    children = listOf(Children(5))
-                )
-            ),
-            siteId = 1,
-            sort = "price:asc"
-        )
+
+        val checkedInDateArray = checkedInDate.split("/")
+        val checkedOutDateArray = checkedOutDate.split("/")
+
+        val childList = mutableListOf<Children>()
+        for (i in 1..children) {
+            childList.add(Children(5))
+        }
+        val samplePropertiesListRequest =
+            propertiesListRequest(checkedInDateArray, checkedOutDateArray, adult, childList)
 
 
         val response = api.getPropertiesList(samplePropertiesListRequest).toPropertyList()
@@ -98,5 +72,46 @@ open class ShacklesRepositoryImpl @Inject constructor(
     override suspend fun deleteProperty(propertyQuery: PropertyQuery) {
         shacklesDao.deleteSearchQuery(propertyQuery.toShacklesSearchEntity())
     }
+
+    private fun propertiesListRequest(
+        checkedInDateArray: List<String>,
+        checkedOutDateArray: List<String>,
+        adult: Int,
+        childList: MutableList<Children>
+    ): PropertiesListRequest {
+        return PropertiesListRequest(
+            checkInDate = CheckInOutDate(
+                day = checkedInDateArray[0].toInt(),
+                month = checkedInDateArray[1].toInt(),
+                year = checkedInDateArray[2].toInt()
+            ),
+            checkOutDate = CheckInOutDate(
+                day = checkedOutDateArray[0].toInt(),
+                month = checkedOutDateArray[1].toInt(),
+                year = checkedOutDateArray[2].toInt()
+            ),
+            currency = "USD",
+            destination = Destination("New York City"),
+            eaPid = 12345,
+            filters = Filters(
+                price = Price(
+                    min = 100,
+                    max = 500
+                )
+            ),
+            locale = "en_US",
+            resultsSize = 10,
+            resultsStartingIndex = 0,
+            rooms = listOf(
+                Room(
+                    adults = adult,
+                    children = childList
+                )
+            ),
+            siteId = 1,
+            sort = "price:asc"
+        )
+    }
+
 
 }

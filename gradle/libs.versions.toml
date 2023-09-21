@@ -48,6 +48,7 @@ constraintLayout = { module = "androidx.constraintlayout:constraintlayout", vers
 material = { module = "com.google.android.material:material", version.ref = "material" }
 navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
 navigationTesting = { module = "androidx.navigation:navigation-testing", version.ref = "navigationTesting" }
 roomKtx = { module = "androidx.room:room-ktx", version.ref = "room" }

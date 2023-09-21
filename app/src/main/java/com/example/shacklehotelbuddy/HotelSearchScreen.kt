@@ -3,17 +3,28 @@ package com.example.shacklehotelbuddy
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,11 +40,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.shacklehotelbuddy.ui.components.MainColumn
 import com.example.shacklehotelbuddy.ui.theme.ShackleHotelBuddyTheme
 import com.example.shacklehotelbuddy.ui.theme.Teal
+import com.example.shacklehotelbuddy.ui.theme.White
 import com.test.domain.model.PropertyQuery
 import java.util.Calendar
 
@@ -75,19 +90,46 @@ fun HotelSearchScreen(
             ),
         contentAlignment = Alignment.Center
     ) {
-        MainColumn(
-            checkInSelectedDateText = checkInDate,
-            onCheckInDateChange = { newDate -> checkInDate = newDate },
-            checkInDatePicker = checkInDatePicker,
-            checkOutSelectedDateText = checkOutDate,
-            onCheckOutDateChange = { newDate -> checkOutDate = newDate },
-            checkOutDatePicker = checkOutDatePicker,
-            adultText = adultCount,
-            onAdultTextChange = { newText -> adultCount = newText },
-            childrenText = childrenCount,
-            onChildrenTextChange = { newText -> childrenCount = newText },
-            focusManager = focusManager
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            MainColumn(
+                checkInSelectedDateText = checkInDate,
+                onCheckInDateChange = { newDate -> checkInDate = newDate },
+                checkInDatePicker = checkInDatePicker,
+                checkOutSelectedDateText = checkOutDate,
+                onCheckOutDateChange = { newDate -> checkOutDate = newDate },
+                checkOutDatePicker = checkOutDatePicker,
+                adultText = adultCount,
+                onAdultTextChange = { newText -> adultCount = newText },
+                childrenText = childrenCount,
+                onChildrenTextChange = { newText -> childrenCount = newText },
+                focusManager = focusManager
+            ) {
+
+            }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent)
+                    .absolutePadding(16.dp, 12.dp, 0.dp, 8.dp),
+                text = stringResource(R.string.recent_searches),
+                style = ShackleHotelBuddyTheme.typography.bodyMedium,
+                color = ShackleHotelBuddyTheme.colors.white
+            )
+
+            LazyColumn {
+                items(
+                    items = searchQueryList
+                ) {
+                    SearchQueryItem(
+                        task = it,
+                        navController
+                    )
+                }
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -151,4 +193,85 @@ fun createDatePickerDialog(
     return datePickerDialog
 }
 
-// ... (rest of your code, including other composables like SearchQueryItem and textFieldColors)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchQueryItem(
+    task: PropertyQuery,
+    navController: NavController
+) {
+    Card(
+        modifier = Modifier
+            .absolutePadding(16.dp, 6.dp, 16.dp, 6.dp)
+            .fillMaxWidth()
+            .height(48.dp),
+        colors = CardDefaults.cardColors(containerColor = White),
+        shape = RoundedCornerShape(8.dp),
+        onClick = {
+            navController.currentBackStackEntry?.savedStateHandle?.apply {
+                set("propertyQuery", task)
+            }
+            navController.navigate(AppScreen.PropertyListScreen.route)
+        }
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .absolutePadding(8.dp, 0.dp, 8.dp, 0.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.manage_history),
+                contentDescription = stringResource(R.string.search),
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(1.dp)
+                    .background(ShackleHotelBuddyTheme.colors.grayBorder)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent),
+                text = "${task.checkedInDate} - ${task.checkedOutDate}    ${task.adults} adult, ${task.children} children",
+                style = ShackleHotelBuddyTheme.typography.bodyMedium,
+                color = ShackleHotelBuddyTheme.colors.grayText,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SearchQueryScreenView() {
+    ShackleHotelBuddyTheme {
+        HotelSearchScreen(
+            rememberNavController(),
+            listOf(),
+            onSearchClick = {
+
+            }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SearchQueryScreenItemView() {
+    ShackleHotelBuddyTheme {
+        SearchQueryItem(
+            PropertyQuery(2, "2/08/2023", "3/08/2023", 2, 3, 4L),
+            rememberNavController()
+        )
+    }
+}

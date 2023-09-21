@@ -33,19 +33,18 @@ class MainActivity : ComponentActivity() {
                         HotelSearchScreen(navController, propertyQueryList.value, onSearchClick = {
                             viewModel.insertPropertyQuery(it)
                             navController.currentBackStackEntry?.savedStateHandle?.apply {
-                                set("searchQuery", it)
+                                set("propertyQuery", it)
                             }
                             navController.navigate(AppScreen.PropertyListScreen.route)
                         })
                     }
-
 
                     composable(
                         route = AppScreen.PropertyListScreen.route
                     ) {
                         val propertyQuery =
                             navController.previousBackStackEntry?.savedStateHandle?.get<PropertyQuery>(
-                                "searchQuery"
+                                "propertyQuery"
                             )
                         val viewModel: ShacklesViewModel = hiltViewModel()
 

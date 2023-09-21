@@ -45,7 +45,6 @@ dependencies {
     implementation libs.material
 
     implementation libs.daggerHiltAndroid
-    implementation project(path: ':data')
 
     kapt libs.daggerHiltAndroidCompiler
     kapt libs.androidxHiltCompiler
@@ -57,10 +56,10 @@ dependencies {
     implementation libs.roomKtx
     implementation libs.roomRuntime
 
-    implementation project(path: ':app')
     implementation project(path: ':database')
     implementation project(path: ':network')
     implementation project(path: ':domain')
+    implementation project(path: ':data')
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
